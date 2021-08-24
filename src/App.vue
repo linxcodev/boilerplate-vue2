@@ -1,28 +1,52 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
-</template>
+    <div>
+        <loading :active.sync="loadPage" 
+        :is-full-page="true" :loader="'bars'" :color="'#1f1498'"></loading>
 
+        <app-sidebar v-show="isAuth"/>
+        <div :class="{ 'c-wrapper' : isAuth }">
+            <app-header v-if="isAuth" />
+            <transition name="fade" mode="out-in">
+                <router-view />
+            </transition>
+            <app-footer v-if="isAuth" />
+        </div >
+    </div>
+</template>
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import AppSidebar from '@/components/AppSidebar.vue'
+import AppHeader from '@/components/AppHeader.vue'
+import AppFooter from '@/components/AppFooter.vue'
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    components: {
+        AppHeader,
+        AppSidebar,
+        AppFooter,
+        Loading
+    },
+    computed: {
+        // ...mapState(['token', 'loadPage']),
+        // ...mapGetters(['isAuth']),
+    },
+    methods: {
+        // ...mapActions('setting',['getConfig'])
+    },
+    async created() {
+        // await this.getConfig()
+        console.log("jalan App vue");
+    }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+    @import "~@coreui/coreui/scss/coreui";
+    @import 'node_modules/bootstrap-vue/src/index.scss';    
+    @import "assets/plugins/flaticon2/flaticon.css";
+	@import "assets/plugins/flaticon/flaticon.css";
+    .swal2-popup {
+        font-size: 0.7rem !important;
+    }
 </style>
