@@ -27,29 +27,33 @@ const router = new VueRouter({
   routes
 })
 
-// router.beforeEach((to, from , next) => {
-//   store.commit('CLEAR_ERRORS')
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     let auth = store.getters.isAuth
-//     if (!auth) {
-//       store.commit('LOADING_PAGE', true)
-//       next({ name: 'login' })
-//     }
-//     else {
-//       store.commit('LOADING_PAGE', true)
-//       next()
-//     }
-//   }
-//   else {
-//     store.commit('LOADING_PAGE', true)
-//     next()
-//   }
-// })
+router.beforeEach((to, from , next) => {
+  store.commit('CLEAR_ERRORS')
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    let auth = store.getters.isAuth
+    if (!auth) {
+      store.commit('LOADING_PAGE', true)
+      next({ name: 'login' })
+    }
+    else {
+      store.commit('LOADING_PAGE', true)
+      next()
+    }
+  }
+  else {
+    store.commit('LOADING_PAGE', true)
+    next()
+  }
+})
 
 
-router.afterEach(() => {
+router.afterEach((to) => {
   store.commit('LOADING_PAGE', false)
   store.commit('SET_LOADING', false)
+
+  Vue.nextTick(() => {
+    document.title = to.meta.title
+  });
 })
 
 export default router
